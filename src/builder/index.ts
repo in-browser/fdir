@@ -1,4 +1,4 @@
-import { sep } from "path";
+import { sep } from "pathe";
 import {
   Output,
   OnlyCountsOutput,
@@ -9,35 +9,44 @@ import {
   ExcludePredicate,
   GlobFunction,
   GlobParams,
+  FileSystemInterface,
 } from "../types";
 import { APIBuilder } from "./api-builder";
-import type picomatch from "picomatch";
-import type { Matcher, PicomatchOptions } from "picomatch";
+import pm from "picomatch";
+import type { Matcher } from "picomatch";
 
-var pm: typeof picomatch | null = null;
-/* c8 ignore next 6 */
-try {
-  require.resolve("picomatch");
-  pm = require("picomatch");
-} catch (_e) {
-  // do nothing
+function defaults<T extends Record<string, any>>(userOptions: Partial<T>, defaultOptions: Partial<T>): T {
+  const result = { ...userOptions };
+  
+  for (const key in defaultOptions) {
+    if (
+      Object.prototype.hasOwnProperty.call(defaultOptions, key) && 
+      defaultOptions[key] !== undefined && 
+      result[key] === undefined
+    ) {
+      result[key] = defaultOptions[key];
+    }
+  }
+  
+  return result as T;
 }
 
 export class Builder<
   TReturnType extends Output = PathsOutput,
-  TGlobFunction = typeof picomatch
+  TGlobFunction = typeof pm
 > {
   private readonly globCache: Record<string, Matcher> = {};
-  private options: Options<TGlobFunction> = {
-    maxDepth: Infinity,
-    suppressErrors: true,
-    pathSeparator: sep,
-    filters: [],
-  };
+  private options: Options<TGlobFunction>
   private globFunction?: TGlobFunction;
 
-  constructor(options?: Partial<Options<TGlobFunction>>) {
-    this.options = { ...this.options, ...options };
+  constructor(options: Partial<Options<TGlobFunction>> & { fileSystem: FileSystemInterface }) {
+    this.options = defaults<Options<TGlobFunction>>(options, {
+      maxDepth: Infinity,
+      suppressErrors: true,
+      pathSeparator: sep,
+      filters: []
+    });
+    
     this.globFunction = this.options.globFunction;
   }
 

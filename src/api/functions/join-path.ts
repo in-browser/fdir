@@ -1,4 +1,4 @@
-import { relative } from "path";
+import { relative } from "pathe";
 import { Options, PathSeparator } from "../../types";
 import { convertSlashes } from "../../utils";
 

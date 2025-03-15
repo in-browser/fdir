@@ -1,11 +1,10 @@
-import fs from "fs";
 import { WalkerState, Options } from "../../types";
-import { dirname } from "path";
+import { dirname } from "pathe";
 
 export type ResolveSymlinkFunction = (
   path: string,
   state: WalkerState,
-  callback: (stat: fs.Stats, path: string) => void
+  callback: (stat: any, path: string) => void
 ) => void;
 
 const resolveSymlinksAsync: ResolveSymlinkFunction = function (
@@ -15,14 +14,14 @@ const resolveSymlinksAsync: ResolveSymlinkFunction = function (
 ) {
   const {
     queue,
-    options: { suppressErrors },
+    options: { suppressErrors, fileSystem },
   } = state;
   queue.enqueue();
 
-  fs.realpath(path, (error, resolvedPath) => {
+  fileSystem.realpath(path, (error, resolvedPath) => {
     if (error) return queue.dequeue(suppressErrors ? null : error, state);
 
-    fs.stat(resolvedPath, (error, stat) => {
+    fileSystem.stat(resolvedPath, (error, stat) => {
       if (error) return queue.dequeue(suppressErrors ? null : error, state);
 
       if (stat.isDirectory() && isRecursive(path, resolvedPath, state))
@@ -41,13 +40,13 @@ const resolveSymlinks: ResolveSymlinkFunction = function (
 ) {
   const {
     queue,
-    options: { suppressErrors },
+    options: { suppressErrors, fileSystem },
   } = state;
   queue.enqueue();
 
   try {
-    const resolvedPath = fs.realpathSync(path);
-    const stat = fs.statSync(resolvedPath);
+    const resolvedPath = fileSystem.realpathSync(path);
+    const stat = fileSystem.statSync(resolvedPath);
 
     if (stat.isDirectory() && isRecursive(path, resolvedPath, state)) return;
 

@@ -65,6 +65,8 @@ export type Options<TGlobFunction = unknown> = {
   pathSeparator: PathSeparator;
   signal?: AbortSignal;
   globFunction?: TGlobFunction;
+  // Custom file system implementation for browser support
+  fileSystem: FileSystemInterface;
 };
 
 export type GlobMatcher = (test: string) => boolean;
@@ -78,3 +80,23 @@ export type GlobParams<T> = T extends (
 ) => GlobMatcher
   ? TParams
   : [];
+
+// Define interface for custom file system implementation
+export interface FileSystemInterface {
+  readdir: any;
+  readdirSync: any;
+  stat: any;
+  statSync: any;
+  realpath: any;
+  realpathSync: any;
+  readFile: any;
+  writeFile: any;
+}
+
+// Define Dirent interface to replace Node.js fs.Dirent
+export interface Dirent {
+  name: string;
+  isFile(): boolean;
+  isDirectory(): boolean;
+  isSymbolicLink(): boolean;
+}

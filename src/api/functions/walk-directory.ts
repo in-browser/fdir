@@ -1,12 +1,11 @@
-import { WalkerState } from "../../types";
-import fs from "fs";
+import { WalkerState, Dirent } from "../../types";
 
 export type WalkDirectoryFunction = (
   state: WalkerState,
   crawlPath: string,
   directoryPath: string,
   depth: number,
-  callback: (entries: fs.Dirent[], directoryPath: string, depth: number) => void
+  callback: (entries: Dirent[], directoryPath: string, depth: number) => void
 ) => void;
 
 const readdirOpts = { withFileTypes: true } as const;
@@ -24,9 +23,12 @@ const walkAsync: WalkDirectoryFunction = (
   state.counts.directories++;
   state.queue.enqueue();
 
+  // Get the file system implementation to use
+  const fileSystem = state.options.fileSystem;
+
   // Perf: Node >= 10 introduced withFileTypes that helps us
   // skip an extra fs.stat call.
-  fs.readdir(crawlPath || ".", readdirOpts, (error, entries = []) => {
+  fileSystem.readdir(crawlPath || ".", readdirOpts, (error, entries = []) => {
     callback(entries, directoryPath, currentDepth);
 
     state.queue.dequeue(state.options.suppressErrors ? null : error, state);
@@ -44,9 +46,12 @@ const walkSync: WalkDirectoryFunction = (
   state.visited.push(crawlPath);
   state.counts.directories++;
 
-  let entries: fs.Dirent[] = [];
+  // Get the file system implementation to use
+  const fileSystem = state.options.fileSystem;
+
+  let entries: Dirent[] = [];
   try {
-    entries = fs.readdirSync(crawlPath || ".", readdirOpts);
+    entries = fileSystem.readdirSync(crawlPath || ".", readdirOpts);
   } catch (e) {
     if (!state.options.suppressErrors) throw e;
   }

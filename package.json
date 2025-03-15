@@ -1,6 +1,9 @@
 {
-  "name": "fdir",
-  "version": "6.4.3",
+  "name": "@in-browser/fdir",
+  "version": "1.0.0",
+  "publishConfig": {
+    "access": "public"
+  },
   "description": "The fastest directory crawler & globbing alternative to glob, fast-glob, & tiny-glob. Crawls 1m files in < 1s",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -42,6 +45,9 @@
     "url": "https://github.com/thecodrr/fdir/issues"
   },
   "homepage": "https://github.com/thecodrr/fdir#readme",
+  "dependencies": {
+    "pathe": "^2.0.3"
+  },
   "devDependencies": {
     "@types/glob": "^8.1.0",
     "@types/mock-fs": "^4.13.4",
@@ -84,5 +90,6 @@
     "picomatch": {
       "optional": true
     }
-  }
+  },
+  "packageManager": "pnpm@9.15.1"
 }

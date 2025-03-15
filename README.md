@@ -1,3 +1,12 @@
+## Updates in this fork
+
+In this fork, we add options.fileSystem to make it work in browsers.
+All tests are passed after these updates.
+
+
+Original README.md
+---
+
 <p align="center">
 <img src="https://github.com/thecodrr/fdir/raw/master/assets/fdir.gif" width="75%"/>
 

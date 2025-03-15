@@ -1,6 +1,6 @@
-import { basename, dirname } from "path";
+import { basename, dirname } from "pathe";
 import { normalizePath } from "../utils";
-import { ResultCallback, WalkerState, Options } from "../types";
+import { ResultCallback, WalkerState, Options, Dirent } from "../types";
 import * as joinPath from "./functions/join-path";
 import * as pushDirectory from "./functions/push-directory";
 import * as pushFile from "./functions/push-file";
@@ -10,7 +10,6 @@ import * as resolveSymlink from "./functions/resolve-symlink";
 import * as invokeCallback from "./functions/invoke-callback";
 import * as walkDirectory from "./functions/walk-directory";
 import { Queue } from "./queue";
-import { Dirent } from "fs";
 import { Output } from "../types";
 import { Counter } from "./counter";
 

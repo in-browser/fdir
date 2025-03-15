@@ -1,4 +1,4 @@
-import { sep, normalize, resolve } from "path";
+import { sep, normalize, resolve } from "pathe";
 import { PathSeparator } from "./types";
 
 export function cleanPath(path: string) {
@@ -26,9 +26,7 @@ export function normalizePath(
   }
 ) {
   const { resolvePaths, normalizePath, pathSeparator } = options;
-  const pathNeedsCleaning =
-    (process.platform === "win32" && path.includes("/")) ||
-    path.startsWith(".");
+  const pathNeedsCleaning = path.startsWith(".");
 
   if (resolvePaths) path = resolve(path);
   if (normalizePath || pathNeedsCleaning) path = cleanPath(path);
